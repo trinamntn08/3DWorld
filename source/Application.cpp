@@ -320,7 +320,7 @@ void Application::DisplayFPS(float currentFrame)
         // Creates new title
         std::string FPS = std::to_string(static_cast<int>(fps));
         std::string ms = std::to_string((msPerFrame));
-        std::string newTitle = "3D Visualizer - " + FPS + "FPS / " + ms + "ms";
+        std::string newTitle = "3D World - " + FPS + "FPS / " + ms + "ms";
 
         glfwSetWindowTitle(m_window, newTitle.c_str());
 

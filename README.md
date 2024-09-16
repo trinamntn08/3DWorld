@@ -2,6 +2,8 @@
 
 This project is designed to visualize 3D models and perform various manipulations on the models using OpenGL.
 
+![My World]((./deps/Intro.png))
+
 ## Prerequisites
 
 Before getting started with this project, ensure that you have the following necessary libraries installed:
