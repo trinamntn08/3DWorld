@@ -2,7 +2,7 @@
 
 This project is designed to visualize 3D world and perform various manipulations on the models using OpenGL.
 
-![My World]((./deps/Intro.png))
+![My World]((deps/Intro.png))
 
 ## Prerequisites
 
