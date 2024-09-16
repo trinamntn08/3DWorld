@@ -449,7 +449,7 @@ void Scene::RenderTerrain2(Shader& shader_terrain2, const std::unique_ptr<Camera
 	glm::mat4 view = camera->GetViewMatrix();
 	glm::mat4 projection = camera->GetProjectionMatrix();
 	shader_terrain2.setMat_MVP(model, view, projection);
-	m_terrain2->Render(shader_terrain2,camera);
+	m_terrainSimul->Render(shader_terrain2,camera);
 	// Check for OpenGL errors
 	if (glGetError() != GL_NO_ERROR)
 	{

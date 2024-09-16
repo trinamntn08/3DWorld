@@ -34,12 +34,12 @@ enum tPosition {
 	C, N, S, E, W, SE, SW, NE, NW, totTiles
 };
 
-class Terrain2
+class TerrainSimul
 {
 public:
 
-	Terrain2(int gl=100);
-	~Terrain2() {};
+	TerrainSimul(int gl=100);
+	~TerrainSimul() {};
 
 	// Function to initialize per-patch terrain mesh
 	std::unique_ptr<Mesh> InitializePatchTerrainMesh();

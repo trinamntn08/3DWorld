@@ -104,15 +104,16 @@ void Application::InitShader()
     Shader shader_skyBox  = Shader("source/shaders/sky/skybox_vertex.glsl", "source/shaders/sky/skybox_fragment.glsl");
     Shader shader_skyDome = Shader("source/shaders/sky/skydome_vertex.glsl", "source/shaders/sky/skydome_fragment.glsl");
     
-    Shader shader_rawTerrain = Shader("source/shaders/terrain_vertex.glsl", "source/shaders/terrain_fragment.glsl");
-    Shader shader_tessTerrain = Shader("source/shaders/gpuheight.vs", "source/shaders/gpuheight.glsl", nullptr,
-                                   "source/shaders/gpuheight.tcs", "source/shaders/gpuheight.tes");    
+    Shader shader_rawTerrain = Shader("source/shaders/terrain/realTerrain_raw.vs", "source/shaders/terrain/realTerrain_raw.frag");
+    Shader shader_tessTerrain = Shader("source/shaders/terrain/realTerrain_tess.vs", "source/shaders/terrain/realTerrain_tess.frag", 
+                                        nullptr,
+                                        "source/shaders/terrain/realTerrain_tess.tcs", "source/shaders/terrain/realTerrain_tess.tes");    
 
-    Shader shader_simulTerrain = Shader("source/shaders/terrain/terrain.vert", 
-                                    "source/shaders/terrain/terrain.frag",
+    Shader shader_simulTerrain = Shader("source/shaders/terrain/simulTerrain.vert", 
+                                    "source/shaders/terrain/simulTerrain.frag",
                                     nullptr,
-                                    "source/shaders/terrain/terrain.tcs",
-                                    "source/shaders/terrain/terrain.tes");
+                                    "source/shaders/terrain/simulTerrain.tcs",
+                                    "source/shaders/terrain/simulTerrain.tes");
 
     Shader shader_plane = Shader("source/shaders/adv_lighting_vertex.glsl", 
                                     "source/shaders/adv_lighting_fragment.glsl");

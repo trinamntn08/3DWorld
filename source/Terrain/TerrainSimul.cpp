@@ -1,11 +1,11 @@
-#include "Terrain2.h"
+#include "TerrainSimul.h"
 #include <glfw3.h>
 #include <imgui.h>
 #include <imgui_impl_opengl3.h>
 #include <imgui_impl_glfw.h>
 #include"../utils.h"
 
-Terrain2::Terrain2(int gl)
+TerrainSimul::TerrainSimul(int gl)
 {
 	seed = genRandomVec3();
 
@@ -17,7 +17,7 @@ Terrain2::Terrain2(int gl)
 
 }
 
-std::unique_ptr<Mesh> Terrain2::InitializePatchTerrainMesh()
+std::unique_ptr<Mesh> TerrainSimul::InitializePatchTerrainMesh()
 {
 	//Vertices
 	std::vector<Vertex> vertices;
@@ -92,7 +92,7 @@ std::unique_ptr<Mesh> Terrain2::InitializePatchTerrainMesh()
 	return std::make_unique<Mesh>(vertices, indices, textures_terrain);
 }
 
-std::vector<Texture> Terrain2::LoadAllTerrainTextures(std::string path_terrain_textures)
+std::vector<Texture> TerrainSimul::LoadAllTerrainTextures(std::string path_terrain_textures)
 {
 	std::vector<Texture> textures_terrain;
 	Texture sand = LoadTerrainTextures("sand", path_terrain_textures + "sand.jpg");
@@ -110,7 +110,7 @@ std::vector<Texture> Terrain2::LoadAllTerrainTextures(std::string path_terrain_t
 	textures_terrain.push_back(terrain);
 	return textures_terrain;
 }
-Texture Terrain2::LoadTerrainTextures(std::string name_texture, std::string pathFile_texture)
+Texture TerrainSimul::LoadTerrainTextures(std::string name_texture, std::string pathFile_texture)
 {
 	Texture texture_loaded;
 	unsigned int textureID;
@@ -157,7 +157,7 @@ Texture Terrain2::LoadTerrainTextures(std::string name_texture, std::string path
 }
 
 
-void Terrain2::GenerateTilesGrid(glm::vec2 offset)
+void TerrainSimul::GenerateTilesGrid(glm::vec2 offset)
 {
 	listTilePositions.resize(gridLength * gridLength);
 
@@ -174,7 +174,7 @@ void Terrain2::GenerateTilesGrid(glm::vec2 offset)
 	}
 }
 
-void Terrain2::SetTilePositionsBuffer(std::vector<glm::vec2>& pos)
+void TerrainSimul::SetTilePositionsBuffer(std::vector<glm::vec2>& pos)
 {
 	if (posBuffer) 
 	{
@@ -198,11 +198,11 @@ void Terrain2::SetTilePositionsBuffer(std::vector<glm::vec2>& pos)
 	}
 }
 
-void Terrain2::deleteBuffer(){
+void TerrainSimul::deleteBuffer(){
 	glDeleteBuffers(1, &posBuffer);
 	posBuffer = 0;
 }
-void Terrain2::Render(Shader shader, const std::unique_ptr<Camera>& camera)
+void TerrainSimul::Render(Shader shader, const std::unique_ptr<Camera>& camera)
 {
 	glEnable(GL_CLIP_DISTANCE0);
 	shader.activate();
@@ -250,7 +250,7 @@ void Terrain2::Render(Shader shader, const std::unique_ptr<Camera>& camera)
 	m_patchTerrainMesh->RenderTerrain(shader, cellsCount, nbrInstances);
 	glDisable(GL_CLIP_DISTANCE0);
 }
-void Terrain2::SetGui()
+void TerrainSimul::SetGui()
 {
 	ImGui::Begin("Terrain controls: ");
 	ImGui::SliderInt("Octaves", &m_terrainParams.octaves, 1, 20);
@@ -263,7 +263,7 @@ void Terrain2::SetGui()
 	ImGui::ColorEdit3("Rock color", (float*)&m_terrainParams.rockColor[0]); // Edit 3 floats representing a color
 	ImGui::End();
 }
-bool Terrain2::getWhichTileCameraIs(glm::vec2& result) {
+bool TerrainSimul::getWhichTileCameraIs(glm::vec2& result) {
 
 	//for (glm::vec2 p : positionVec) {
 	//	if (inTile(*(scene->cam), p)) {
@@ -275,7 +275,7 @@ bool Terrain2::getWhichTileCameraIs(glm::vec2& result) {
 	return false;
 }
 
-void Terrain2::getColRow(int i, int& col, int& row)
+void TerrainSimul::getColRow(int i, int& col, int& row)
 {
 	col = (i) % gridLength;
 
@@ -283,7 +283,7 @@ void Terrain2::getColRow(int i, int& col, int& row)
 }
 
 /*
-void Terrain2::initializePlaneVAO(const int res, const int width, GLuint* planeVAO, GLuint* planeVBO, GLuint* planeEBO)
+void TerrainSimul::initializePlaneVAO(const int res, const int width, GLuint* planeVAO, GLuint* planeVBO, GLuint* planeEBO)
 {
 	const int nPoints = res * res;
 	const int size = nPoints * 3 + nPoints * 3 + nPoints * 2;
@@ -367,7 +367,7 @@ void Terrain2::initializePlaneVAO(const int res, const int width, GLuint* planeV
 */
 
 /*
-void Terrain2::draw()
+void TerrainSimul::draw()
 {
 	sceneElements* se = drawableObject::scene;
 	drawFog = !se->wireframe;
@@ -404,7 +404,7 @@ void Terrain2::draw()
 	shad->setFloat("power", power);
 
 	shad->setBool("normals", true);
-	shad->setBool("drawFog", Terrain2::drawFog);
+	shad->setBool("drawFog", TerrainSimul::drawFog);
 
 
 	// set textures
@@ -439,10 +439,10 @@ void Terrain2::draw()
 */
 
 /*
-void Terrain2::setGui()
+void TerrainSimul::setGui()
 {
-	ImGui::Begin("Terrain2 controls: ");
-	ImGui::TextColored(ImVec4(1, 1, 0, 1), "Terrain2 Controls");
+	ImGui::Begin("TerrainSimul controls: ");
+	ImGui::TextColored(ImVec4(1, 1, 0, 1), "TerrainSimul Controls");
 	//ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
 	//ImGui::Checkbox("Clouds PostProc + God Rays", this->getPostProcPointer());
 	ImGui::SliderInt("Octaves", &octaves, 1, 20);
@@ -463,7 +463,7 @@ void Terrain2::setGui()
 }
 */
 
-void Terrain2::drawVertices(int nInstances) {
+void TerrainSimul::drawVertices(int nInstances) {
 	//glBindVertexArray(planeVAO);
 	////shader.use();
 	//shad->use();
@@ -471,7 +471,7 @@ void Terrain2::drawVertices(int nInstances) {
 	//glBindVertexArray(0);
 }
 
-void Terrain2::setScale(float scale)
+void TerrainSimul::setScale(float scale)
 {
 	glm::mat4 id;
 	glm::mat4 scaleMatrix = glm::scale(id, glm::vec3(scale, 0.0, scale));
@@ -480,7 +480,7 @@ void Terrain2::setScale(float scale)
 	scaleFactor = scale;
 }
 //
-//bool Terrain2::inTile(const Camera camera, glm::vec2 pos) {
+//bool TerrainSimul::inTile(const Camera camera, glm::vec2 pos) {
 //	float camX = camera.Position.x;
 //	float camY = camera.Position.z;
 //
@@ -508,7 +508,7 @@ void Terrain2::setScale(float scale)
 //}
 
 
-void Terrain2::updateTilesPositions() {
+void TerrainSimul::updateTilesPositions() {
 	/*sceneElements* se = drawableObject::scene;
 	glm::vec2 camPosition(se->cam->Position.x, se->cam->Position.z);
 	int whichTile = -1;
@@ -530,7 +530,7 @@ void Terrain2::updateTilesPositions() {
 }
 
 
-void Terrain2::reset() 
+void TerrainSimul::reset() 
 {
 	int octaves = this->getOctaves();
 	float freq = this->getFreq();

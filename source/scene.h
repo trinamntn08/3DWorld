@@ -8,7 +8,7 @@
 #include"PhysicsEngine/Plane.h"
 
 #include"Terrain/Terrain.h"
-#include"Terrain/Terrain2.h"
+#include"Terrain/TerrainSimul.h"
 
 #include"Sky/AbstractSky.h"
 
@@ -82,7 +82,7 @@ public:
 
 
     inline std::unique_ptr <Terrain>& getTerrain() { return m_terrain; };
-    inline std::unique_ptr <Terrain2>& getTerrain2() { return m_terrain2; };
+    inline std::unique_ptr <TerrainSimul>& getTerrain2() { return m_terrainSimul; };
     inline std::unique_ptr <AbstractSky>& getSky() { return m_sky; };
     inline std::unique_ptr <PlaneModel>& getPlane() { return m_plane; }
 
@@ -112,7 +112,7 @@ private:
     std::unique_ptr<AbstractSky> m_sky = nullptr;
 
     std::unique_ptr<Terrain> m_terrain = nullptr;
-    std::unique_ptr<Terrain2> m_terrain2 = nullptr;
+    std::unique_ptr<TerrainSimul> m_terrainSimul = nullptr;
 
     std::unique_ptr <PlaneModel> m_plane = nullptr;
 
