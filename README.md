@@ -46,10 +46,6 @@ Follow these steps to build the project:
 ## Future Improvements
 This project is still under active development, with several key features planned for future releases:
 
-Advanced Lighting: Implementation of real-time lighting techniques such as shadow mapping, point lights, and specular highlights.
-Physics Engine: Integration of a physics library to simulate realistic object interactions, including collisions and gravity.
-Animation Support: Loading and displaying animated 3D models using skeletal animations.
-
 ## Contributing
 Contributions are welcome! If you have ideas for new features or improvements, feel free to submit a pull request or open an issue on GitHub.
 
