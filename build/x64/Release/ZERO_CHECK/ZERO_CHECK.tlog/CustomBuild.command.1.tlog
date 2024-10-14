@@ -1,0 +1,10 @@
+^D:\DEV\PROJECTS\3DWORLD\BUILD\CMAKEFILES\E014798478F1C5D09AB866D8281823DB\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files (x86)\cmake-3.23.0-windows-x86_64\bin\cmake.exe" -SD:/dev/projects/3DWorld -BD:/dev/projects/3DWorld/build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file D:/dev/projects/3DWorld/build/3DWorld.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

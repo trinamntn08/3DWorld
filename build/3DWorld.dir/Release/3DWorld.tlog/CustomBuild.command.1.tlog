@@ -1,0 +1,10 @@
+^D:\DEV\PROJECTS\3DWORLD\CMAKELISTS.TXT
+setlocal
+"C:\Program Files (x86)\cmake-3.23.0-windows-x86_64\bin\cmake.exe" -SD:/dev/projects/3DWorld -BD:/dev/projects/3DWorld/build --check-stamp-file D:/dev/projects/3DWorld/build/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
