@@ -6,10 +6,9 @@
 namespace ntn 
 {
 
-void SkyDome::render(Shader& shader)
+SkyDome::SkyDome(int numRows, int numCols, float radius) :AbstractSky()
 {
-    shader.activate();
-    m_sky->RenderSkyDome(shader);
+    initSkyDome(numRows, numCols, radius);
 }
 
 void SkyDome::initSkyDome(unsigned int nbr_rows, unsigned int nbr_cols, float radius)
@@ -18,8 +17,15 @@ void SkyDome::initSkyDome(unsigned int nbr_rows, unsigned int nbr_cols, float ra
     std::string skyDomeTexture = ResourceManager::getInstance().getResourcePath("skydome/skydome.jpg");
     std::vector<Texture> texturesLoaded = loadTextures(std::vector<std::string>({ skyDomeTexture }));
 
-    m_sky = std::make_unique<Mesh>(vertices, texturesLoaded);
+    m_skyMesh = std::make_unique<Mesh>(vertices, texturesLoaded);
 }
+
+void SkyDome::render(Shader& shader)
+{
+    shader.activate();
+    m_skyMesh->RenderSkyDome(shader);
+}
+
 std::vector<Vertex> SkyDome::generateVertices(int numRows, int numCols, float radius)
 {
     std::vector<Vertex> vertices;
@@ -77,6 +83,7 @@ Vertex SkyDome::createVertex(const glm::vec3& position)
     vertex.TexCoords = glm::vec2(u, v);
     return vertex;
 }
+
 glm::vec3 SkyDome::calculateSphericalCoords(float radius, float pitch, float heading)
 {
     float x = radius * cosf(glm::radians(pitch)) * sinf(glm::radians(heading));
@@ -85,7 +92,7 @@ glm::vec3 SkyDome::calculateSphericalCoords(float radius, float pitch, float hea
     return glm::vec3(x, y, z);
 }
 
-std::vector<Texture> SkyDome::loadTextures(std::vector<std::string> textures_skydome)
+std::vector<Texture> SkyDome::loadTextures(std::vector<std::string>& textures_skydome)
 {
     std::vector<Texture> texturesLoaded;
     unsigned int textureID;

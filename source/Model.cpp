@@ -112,7 +112,7 @@ void Model::loadModel(std::string const& path)
 void Model::Render(Shader& shader)
 {
     for (unsigned int i = 0; i < meshes.size(); i++)
-        meshes[i].Render(shader);
+        meshes[i].render(shader);
 }
 void Model::processNode(aiNode* node, const aiScene* scene)
 {

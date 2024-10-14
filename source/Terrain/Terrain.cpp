@@ -41,7 +41,7 @@ void Terrain::Render(Shader& shader)
 
 	if (m_typeRealTerrain == TerrainType::Raw)
 	{
-		m_terrain->Render(shader);
+		m_terrain->render(shader);
 	}
 	else
 	{

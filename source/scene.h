@@ -38,14 +38,15 @@ namespace ntn
         // Scene Management
         void setGui();
         void loadScene();
-        void resetScene();
-        void clearScene();
+        void resetScene(); //reset objects's positions
+        void clearScene(); //delete objects
 
         void onUpdate(float deltaTime);
 
+        SkyType typeSky() { return m_typeSky; };
         void updateSky(SkyType& skyType);
-        inline SkyType typeSky() { return m_typeSky; };
-        void UpdateTerrain(TerrainType terrainType);
+
+        void updateTerrain(TerrainType terrainType);
 
         // Getters
         inline std::unique_ptr <Terrain>& getTerrain() { return m_terrain; };
@@ -68,13 +69,13 @@ namespace ntn
         inline int numberOfObjects() { return m_allPhysicsObjects.size(); };
 
         // Rendering Methods
-        void Render(ShadersManager& shadersManager, const std::unique_ptr<Camera>& camera);
-        void RenderPhysicsObjects(Shader& shader, const std::unique_ptr<Camera>& camera, bool isRender_BBoxes = false);
-        void RenderSkyBox(Shader& shader_skyBox, const std::unique_ptr<Camera>& camera);
+        void render(ShadersManager& shadersManager, const std::unique_ptr<Camera>& camera);
+        void renderSkyBox(Shader& shader_skyBox, const std::unique_ptr<Camera>& camera);
         void RenderSkyDome(Shader& shader_skydome, const std::unique_ptr<Camera>& camera);
         void RenderPlane(Shader& shader_plane, const std::unique_ptr<Camera>& camera);
         void RenderTerrain(Shader& shader_terrain, const std::unique_ptr<Camera>& camera);
         void RenderTerrain2(Shader& shader_terrain2, const std::unique_ptr<Camera>& camera);
+        void RenderPhysicsObjects(Shader& shader, const std::unique_ptr<Camera>& camera, bool isRender_BBoxes = false);
 
         /**************     COLLISIONS  ****************/
         void checkCollisions();
@@ -93,8 +94,6 @@ namespace ntn
         static bool boxToSphere(PhysicsObject* box, PhysicsObject* sphere);
         static bool boxToPlane(PhysicsObject* box, PhysicsObject* plane);
         static bool boxToBox(PhysicsObject* boxA, PhysicsObject* boxB);
-        /************************************************/
-
 
 
     private:

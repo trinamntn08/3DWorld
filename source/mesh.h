@@ -44,14 +44,13 @@ struct Texture
 class Mesh 
 {
 public:
-    // mesh Data
     std::vector<Vertex>       vertices;
     std::vector<unsigned int> indices;
     std::vector<Texture>      textures;
-    unsigned int VAO;
-    //Empty
+    unsigned int VAO, VBO, EBO;
+
     Mesh();
-    //
+
     Mesh(std::vector<Vertex>& vertices,
         std::vector<unsigned int>& indices,
         std::vector<Texture>& textures);
@@ -66,13 +65,13 @@ public:
 
     ~Mesh();
 
-    void Render(Shader& shader);
+    void render(Shader& shader);
+    void renderSkyBox(Shader& shader);
     void RenderSkyDome(Shader& shader);
     void RenderTesselation(Shader& shader);
     void RenderTerrain(Shader& shader, int res, int nInstances);
+
 private:
-    // render data 
-    unsigned int VBO, EBO;
 
     void setupMesh();
     void setupMeshWithoutIndices();

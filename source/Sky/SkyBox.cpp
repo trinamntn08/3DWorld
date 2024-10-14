@@ -5,46 +5,75 @@
 namespace ntn
 {
 
-static std::string path_skyBox = "skybox/skybox1/";
+Skybox::Skybox() : AbstractSky() 
+{ 
+    initSkyBox(); 
+}
 
-void Skybox::InitSkyBox()
+void Skybox::initSkyBox()
 {
-    // cube vertices for vertex buffer object
-    std::vector<Vertex> vertices;
-    /*7------ 6
+    std::vector<Vertex> vertices = generateCubeVertices();
+    std::vector<unsigned int> indices = generateCubeIndices();
+    std::vector<std::string> texturesFaces = 
+    {
+        ResourceManager::getInstance().getResourcePath("skybox/skybox1/right.png"),
+        ResourceManager::getInstance().getResourcePath("skybox/skybox1/left.png"),
+        ResourceManager::getInstance().getResourcePath("skybox/skybox1/top.png"),
+        ResourceManager::getInstance().getResourcePath("skybox/skybox1/bottom.png"),
+        ResourceManager::getInstance().getResourcePath("skybox/skybox1/back.png"),
+        ResourceManager::getInstance().getResourcePath("skybox/skybox1/front.png"),
+    };
+    std::vector<Texture> texturesLoaded = loadTextures(texturesFaces);
+
+    m_skyMesh = std::make_unique<Mesh>(vertices, indices, texturesLoaded);
+}
+
+void Skybox::render(Shader& shaderSkyBox)
+{
+    shaderSkyBox.activate();
+    m_skyMesh->renderSkyBox(shaderSkyBox);
+}
+
+std::vector<Vertex> Skybox::generateCubeVertices() const
+{
+    /*
+      4------ 7
      /|      /|
     / |     / |
-    3------ 2 |
+    0------ 3 |
     | |     | |
-    | 4---- |--5
+    | 5---- |--6
     | /     | /
     |/      |/
-    0------ 1   */
+    1------ 2   
+    */
+
     glm::vec3 vertexPositions[8] =
     {
-      glm::vec3(-1.0,  1.0,  1.0),
-      glm::vec3(-1.0, -1.0,  1.0),
-      glm::vec3(1.0, -1.0,  1.0),
-      glm::vec3(1.0,  1.0,  1.0),
-      glm::vec3(-1.0,  1.0, -1.0),
-      glm::vec3(-1.0, -1.0, -1.0),
-      glm::vec3(1.0, -1.0, -1.0),
-      glm::vec3(1.0,  1.0, -1.0),
+        glm::vec3(-1.0f,  1.0f,  1.0f),
+        glm::vec3(-1.0f, -1.0f,  1.0f),
+        glm::vec3(1.0f, -1.0f,  1.0f),
+        glm::vec3(1.0f,  1.0f,  1.0f),
+        glm::vec3(-1.0f,  1.0f, -1.0f),
+        glm::vec3(-1.0f, -1.0f, -1.0f),
+        glm::vec3(1.0f, -1.0f, -1.0f),
+        glm::vec3(1.0f,  1.0f, -1.0f),
     };
 
-    for (auto& v : vertexPositions)
+    std::vector<Vertex> vertices;
+    vertices.reserve(8);
+    for (const glm::vec3& pos : vertexPositions)
     {
         Vertex vertex;
-        vertex.Position = v;
-        // Set other vertex attributes if needed
-        vertices.push_back(vertex);
+        vertex.Position = pos;
+        vertices.emplace_back(vertex);
     }
-    // Flip the vertex data
-    for (auto& vertex : vertices) {
-        vertex.Position = glm::vec3(vertex.Position.x, -vertex.Position.y, vertex.Position.z);
-    }
+    return vertices;
+}
 
-    std::vector<unsigned int> indices =
+std::vector<unsigned int> Skybox::generateCubeIndices() const
+{
+    return 
     {
         // Front
         0, 1, 2,
@@ -65,69 +94,40 @@ void Skybox::InitSkyBox()
         0, 1, 4,
         1, 5, 4
     };
-    // set up the skybox textures
-    const std::string right("right.png");
-    const std::string left("left.png");
-    const std::string top("top.png");
-    const std::string bottom("bottom.png");
-    const std::string front("front.png");
-    const std::string back("back.png");
-
-    // Access the singleton instance of ResourceManager
-    ResourceManager& resourceManager = ResourceManager::getInstance();
-
-    std::vector<std::string> textures_faces;
-    textures_faces.push_back(resourceManager.getResourcePath(path_skyBox + right));
-    textures_faces.push_back(resourceManager.getResourcePath(path_skyBox + left));
-    textures_faces.push_back(resourceManager.getResourcePath(path_skyBox + top));
-    textures_faces.push_back(resourceManager.getResourcePath(path_skyBox + bottom));
-    textures_faces.push_back(resourceManager.getResourcePath(path_skyBox + back));
-    textures_faces.push_back(resourceManager.getResourcePath(path_skyBox + front));
-    std::vector<Texture> textures_loaded = loadTextures(textures_faces);
-
-    m_sky = std::make_unique<Mesh>(vertices, indices, textures_loaded);
 }
 
-void Skybox::render(Shader& shader_skyBox)
+std::vector<Texture> Skybox::loadTextures(std::vector<std::string>& texturesFaces)
 {
-    shader_skyBox.activate();
-    m_sky->Render(shader_skyBox);
-}
-
-std::vector<Texture> Skybox::loadTextures(std::vector<std::string> textures_faces)
-{
-    std::vector<Texture> textures_loaded;
+    std::vector<Texture> texturesLoaded;
+    texturesLoaded.reserve(6);
     unsigned int textureID;
+
     glGenTextures(1, &textureID);
     glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
+
     // Load the skybox texture
-    for (int i = 0; i < 6; i++)
+    for (size_t i = 0; i < texturesFaces.size(); ++i)
     {
-        int width, height, nrChannels;
-        unsigned char* data = stbi_load(textures_faces[i].c_str(), &width, &height, &nrChannels, 0);
+        int width, height, nbrChannels;
+        unsigned char* data = stbi_load(texturesFaces[i].c_str(), &width, &height, &nbrChannels, 0);
         if (data)
         {
             GLenum format;
-            if (nrChannels == 1)
+            if (nbrChannels == 1)
                 format = GL_RED;
-            else if (nrChannels == 3)
+            else if (nbrChannels == 3)
                 format = GL_RGB;
-            else if (nrChannels == 4)
+            else if (nbrChannels == 4)
                 format = GL_RGBA;
 
-            glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
-                0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data
-            );
-            if (glGetError())
-            {
-                std::cout << "Texture images loaded failed" << std::endl;
-            }
+            glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, format, 
+                            width, height, 0, format, GL_UNSIGNED_BYTE, data);
 
             stbi_image_free(data);
         }
         else
         {
-            std::cout << "STBI failed to load skyBox texture: " << textures_faces[i] << std::endl;
+            std::cout << "Failed to load skybox texture: " << texturesFaces[i] << std::endl;
             stbi_image_free(data);
         }
     }
@@ -140,11 +140,11 @@ std::vector<Texture> Skybox::loadTextures(std::vector<std::string> textures_face
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
     // Create a Texture object for each face of the skybox
-    for (int i = 0; i < 6; i++)
+    for (size_t i = 0; i < texturesFaces.size(); ++i)
     {
-        textures_loaded.push_back(Texture(textureID, "skyBox", textures_faces[i]));
+        texturesLoaded.emplace_back(Texture(textureID, "skybox", texturesFaces[i]));
     }
 
-    return textures_loaded;
+    return texturesLoaded;
 }
 }

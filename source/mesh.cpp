@@ -1,4 +1,4 @@
-#include"Mesh.h"
+#include"mesh.h"
 
 #include<string>
 #include<vector>
@@ -38,12 +38,6 @@ Mesh::Mesh(std::vector<Vertex>& vertices, std::vector<Texture>& textures, int va
 
 Mesh::~Mesh() 
 {
-   //  Delete the vertex and index buffers
-    //glDeleteBuffers(1, &VBO);
-    //glDeleteBuffers(1, &EBO);
-
-    //// Delete the vertex array object
-    //glDeleteVertexArrays(1, &VAO);
 }
 void Mesh::setupMesh()
 {
@@ -81,16 +75,18 @@ void Mesh::setupMesh()
     // ids
     glEnableVertexAttribArray(5);
     glVertexAttribIPointer(5, 4, GL_INT, sizeof(Vertex), (void*)offsetof(Vertex, m_BoneIDs));
-
     // weights
     glEnableVertexAttribArray(6);
     glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, m_Weights));
     // a_Position
     glEnableVertexAttribArray(7);
     glVertexAttribPointer(7, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, a_Postion));
+    
     glBindVertexArray(0);
+
     GLenum err;
-    while ((err = glGetError()) != GL_NO_ERROR) {
+    while ((err = glGetError()) != GL_NO_ERROR) 
+    {
         std::cerr << "OpenGL error: " << err << std::endl;
     }
 }
@@ -183,7 +179,7 @@ void Mesh::setupTessMesh()
     }
     glPatchParameteri(GL_PATCH_VERTICES, 4);
 }
-void Mesh::Render(Shader& shader)
+void Mesh::render(Shader& shader)
 {
     // bind appropriate textures
     unsigned int diffuseNr = 1;
@@ -222,8 +218,30 @@ void Mesh::Render(Shader& shader)
     {
         printf("OpenGL error in Mesh::Render, code: 0x%x\n", error);
     }
-
 }
+
+void Mesh::renderSkyBox(Shader& shader)
+{
+    // Bind the skybox texture
+    for (size_t i = 0; i < textures.size(); i++)
+    {
+        if (textures[i].type == "skybox") 
+        {
+            glActiveTexture(GL_TEXTURE0 + i);
+            glBindTexture(GL_TEXTURE_CUBE_MAP, textures[i].id);
+            glUniform1i(glGetUniformLocation(shader.ID, "skybox"), i);
+        }
+    }
+
+    // Draw the skybox
+    glBindVertexArray(VAO);
+    glDrawElements(GL_TRIANGLES, static_cast<unsigned int>(indices.size()), GL_UNSIGNED_INT, 0);
+    glBindVertexArray(0);
+
+    // Reset the active texture to default
+    glActiveTexture(GL_TEXTURE0);
+}
+
 void Mesh::RenderSkyDome(Shader& shader)
 {
     // bind appropriate textures

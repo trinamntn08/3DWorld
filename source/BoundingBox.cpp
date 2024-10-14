@@ -98,7 +98,7 @@ namespace ntn
         // Update the model matrix based on the position
         glm::mat4 modelMatrix = glm::mat4(1.0f);
         shader.setMat4("model", modelMatrix);
-        bBox_mesh.Render(shader);
+        bBox_mesh.render(shader);
     }
 
     void BoundingBox::ExpandToInclude(const BoundingBox& bbox)

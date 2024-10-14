@@ -109,7 +109,7 @@ namespace ntn
 
             m_camera->onUpdate(m_window, m_timer.getDeltaTime());
             m_scene->onUpdate(m_timer.getDeltaTime());
-            m_scene->Render(m_shadersManager, m_camera);
+            m_scene->render(m_shadersManager, m_camera);
 
 
             // Reset scene

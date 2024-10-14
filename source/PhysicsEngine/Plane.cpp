@@ -102,7 +102,7 @@ namespace ntn
     void PlaneModel::Render(Shader& shader_plane)
     {
         shader_plane.activate();
-        m_plane->Render(shader_plane);
+        m_plane->render(shader_plane);
     }
 
     void PlaneModel::ComputeBoundingBox()

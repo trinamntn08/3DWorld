@@ -1,6 +1,6 @@
 #pragma once
 
-#include"AbstractSky.h"
+#include "AbstractSky.h"
 #include "..\mesh.h"
 
 namespace ntn
@@ -9,15 +9,18 @@ namespace ntn
 class Skybox:public AbstractSky
 {
 public:
-    explicit Skybox():AbstractSky() { InitSkyBox(); }
+    explicit Skybox();
+
     ~Skybox() {};
 
     void render(Shader& shader) override ;
-
-    std::vector<Texture> loadTextures(std::vector<std::string> textures_faces);
+    std::vector<Texture> loadTextures(std::vector<std::string>& texturesFaces);
 
 private:
-    void InitSkyBox();
+    void initSkyBox();
+    std::vector<Vertex> generateCubeVertices() const;
+    std::vector<unsigned int> generateCubeIndices() const;
+
 };
 }
 
